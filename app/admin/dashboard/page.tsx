@@ -1,7 +1,9 @@
 import Image from 'next/image'
 import { Nav } from "../components/nav";
+import { ShopSwitch } from "../components/shopswtich";
 
-export default function Dashboard() {
+export default function Dashboard(data:any) {
+  data.switch = 1
   return (
     <div>
       <Nav title="dashboard"/>
@@ -51,13 +53,14 @@ export default function Dashboard() {
               </div>
               <div className="row-span-2 col-span-2 flex items-center justify-center">
                 <p className="font-bold text-2xl">
-                  RM 298
+                  298
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <ShopSwitch switch={true}/>
     </div>
   )
 }

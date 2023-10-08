@@ -43,6 +43,19 @@ export function ResultForm (data: any) {
                 </div>
                 : ""
             }
+
+            {
+                data.submitAdmin ?
+                <div className="grid grid-cols-2 gap-4">
+                    <Link href="#" type="button" className="bg-red-500 items-center text-center hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Cancel
+                    </Link>
+                    <Link href="#" type="button" className="bg-green-500 items-center text-center hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Done
+                    </Link>
+                </div>
+                : ""
+            }
         </form>
     )
 }

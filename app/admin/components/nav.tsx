@@ -3,11 +3,7 @@
 import Image from 'next/image'
 import Link from "next/link";
 
-type Props = {
-    title: String;
-};
-
-export function Nav(title: Props) {
+export function Nav(data: any) {
     function toggleBurger () {
         var element = document.getElementById('navbar-hamburger')
         if (element?.classList.contains("hidden")) {
@@ -27,7 +23,7 @@ export function Nav(title: Props) {
                         height={100}
                         priority
                     />
-                    <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">{title.title[0].toUpperCase() + title.title.substring(1)}</span>
+                    <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">{data.title[0].toUpperCase() + data.title.substring(1)}</span>
                 </Link>
                 <button onClick={toggleBurger} data-collapse-toggle="navbar-hamburger" type="button" className="inline-flex items-center justify-center p-2 w-10 h-10 ml-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-hamburger" aria-expanded="false">
                     <span className="sr-only">Open main menu</span>
@@ -38,10 +34,10 @@ export function Nav(title: Props) {
                 <div className="hidden w-full" id="navbar-hamburger">
                     <ul className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
                         <li>
-                            <Link href="/admin/dashboard" className={title.title == 'dashboard' ? 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded dark:bg-blue-600' : 'block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'} aria-current="page">Dashboard</Link>
+                            <Link href="/admin/dashboard" className={data.title == 'dashboard' ? 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded dark:bg-blue-600' : 'block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'} aria-current="page">Dashboard</Link>
                         </li>
                         <li>
-                            <Link href="/admin/booking" className={title.title == 'booking' ? 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded dark:bg-blue-600' : 'block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}>Booking</Link>
+                            <Link href="/admin/booking" className={data.title == 'booking' ? 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded dark:bg-blue-600' : 'block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}>Booking</Link>
                         </li>
                     </ul>
                 </div>

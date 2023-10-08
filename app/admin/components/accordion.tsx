@@ -1,12 +1,13 @@
 "use client"
 
 import { useState } from "react";
+import { ResultForm } from "../../result/form";
 
-const SimpleAccordion = (data:any) => {
+const Accordion = (data:any) => {
     const [open, setOpen] = useState(false);
-    function changeAccordian() {
+    
+    function changeAccordian() {}
 
-    }
     return (
         <div className="w-full">
             <input
@@ -18,22 +19,23 @@ const SimpleAccordion = (data:any) => {
             />
             <label
                 htmlFor="expandCollapse"
-                className="w-full h-10 flex pl-2 items-center mb-4 bg-blue-100 hover:bg-blue-500 transition-colors duration-1000 ease-in-out"
+                className="w-full rounded h-10 flex pl-2 items-center mb-4 bg-blue-100 hover:bg-blue-500 transition-colors duration-1000 ease-in-out"
 
                 onClick={() => setOpen(!open)}
             >
-                {data.count}. Faizul
+                <div className="grid grid-cols-2 gap-4">
+                    <div>{data.count}. Faizul ({data.phone})</div>
+                    <div className={`text-end ${data.status == '0' ? 'text-red-700' : 'text-green-700'}`}>{data.status == '0' ? 'Pending' : 'Done'}</div>
+                </div>
             </label>
             <div
-                className= "overflow-hidden h-0 bg-slate-300 peer-checked:h-[200px] peer-checked:overflow-scroll transition-[height] duration-1000 ease-in-out "
+                className= "overflow-hidden rounded h-0 peer-checked:h-[460px] peer-checked:overflow-scroll transition-[height] duration-1000 ease-in-out"
             >
-                <p className="text-black">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. [...]
-                </p>
+                <ResultForm redirectBack={false}  submitAdmin={data.status == '0' ? true : false}/>
             </div>
         </div>
     );
 };
 
 
-export { SimpleAccordion };
+export { Accordion };
