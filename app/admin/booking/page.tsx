@@ -1,11 +1,24 @@
+"use client"
+
 import { Nav } from "../components/nav";
 import { Accordion } from "../components/accordion";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Booking() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Perform localStorage action
+    if (!localStorage.getItem('token')) {
+      router.push('/admin/login/')
+    }
+  }, [])
+
   return (
     <div>
         <Nav title="booking"/>
-        <form className='py-2 px-2'>   
+        <div className='py-2 px-2'>   
           <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
           <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -21,7 +34,7 @@ export default function Booking() {
           <br />
           <Accordion count="1" phone="0178016870" status="1"/>
           <Accordion count="2" phone="0178016872" status="0"/>
-        </form>
+        </div>
     </div>
   )
 }

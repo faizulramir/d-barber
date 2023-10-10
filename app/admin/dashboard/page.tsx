@@ -1,9 +1,21 @@
+'use client'
+
 import Image from 'next/image'
 import { Nav } from "../components/nav";
 import { ShopSwitch } from "../components/shopswtich";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard(data:any) {
-  data.switch = 1
+  const router = useRouter()
+
+  useEffect(() => {
+    // Perform localStorage action
+    if (!localStorage.getItem('token')) {
+      router.push('/admin/login/')
+    }
+  }, [])
+
   return (
     <div>
       <Nav title="dashboard"/>

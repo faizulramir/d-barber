@@ -2,6 +2,8 @@
 
 import Image from 'next/image'
 import Link from "next/link";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function Nav(data: any) {
     function toggleBurger () {
@@ -12,6 +14,21 @@ export function Nav(data: any) {
             element!.className = 'hidden w-full'
         }
     }
+
+    const router = useRouter()
+
+    useEffect(() => {
+        // Perform localStorage action
+        if (!localStorage.getItem('token')) {
+            router.push('/admin/login/')
+        }
+    }, [])
+
+    function logOut () {
+        localStorage.clear();
+        router.push('/admin/login/')
+    }
+    
     return (
         <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
             <div className="flex flex-wrap items-center justify-between mx-auto p-4">
@@ -38,6 +55,9 @@ export function Nav(data: any) {
                         </li>
                         <li>
                             <Link href="/admin/booking" className={data.title == 'booking' ? 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded dark:bg-blue-600' : 'block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}>Booking</Link>
+                        </li>
+                        <li>
+                            <a onClick={logOut} href="#" className={data.title == 'logout' ? 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded dark:bg-blue-600' : 'block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}>Logout</a>
                         </li>
                     </ul>
                 </div>
