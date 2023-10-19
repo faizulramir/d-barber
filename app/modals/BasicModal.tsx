@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from 'next/navigation'
 import {getCurrentDate, getTimeSelection, getTimeNow} from '../utils/date'
-import { JSX } from "react";
+import { useRef, useEffect, JSX } from 'react';
+import { toast } from "react-toastify";
+import { getBooking, postBooking } from "../api/booking";
 
 export function BasicModal() {
   const router = useRouter()
@@ -14,11 +16,11 @@ export function BasicModal() {
   getTimeSelection().forEach(element => {
     if (getTimeNow() == element.time) {
       result.push(
-        <option key={element.time} value={element.time} defaultValue={element.time}>{element.time} {element.type}</option>
+        <option key={element.time} value={element.time + ' ' + element.type} defaultValue={element.time}>{element.time} {element.type.toUpperCase()}</option>
       )
     } else {
       result.push(
-        <option key={element.time} value={element.time}>{element.time} {element.type}</option>
+        <option key={element.time} value={element.time + ' ' + element.type.toUpperCase()}>{element.time} {element.type.toUpperCase()}</option>
       )
     }
   })
@@ -39,7 +41,7 @@ export function BasicModal() {
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
                     Name*
                   </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" name="name" type="text" placeholder="Name" autoComplete="true"/>
+                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" name="name" type="text" placeholder="Name" autoComplete="true" required/>
                 </div>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
@@ -70,8 +72,66 @@ export function BasicModal() {
 
   }
 
-  function submitData() {
-    router.push('/result?phone=0178016870')
+  const handleSubmit = (event:any) => {
+    event.preventDefault();
+    if (state == '0') {
+      let name = event.target.elements.name.value
+      let phone = event.target.elements.phone.value
+      let b_date = event.target.elements.b_date.value
+      let b_time = event.target.elements.b_time.value
+
+      if (!name || !phone || !b_date || !b_time) {
+        return alert('Please fill in all form!')
+      }
+
+      const data = {
+        name: name,
+        phone: phone,
+        b_date: b_date,
+        b_time: b_time,
+      }
+      
+      if (confirm('Are you sure you to book?')) {
+        postBook(data)
+      }
+    } else if (state == '1') {
+      let phone = event.target.elements.phone.value
+
+      if (!phone) {
+        return alert('Please fill in all form!')
+      }
+      
+      getBook(phone)
+    }
+    
+  }
+
+  function postBook (data:any) {
+    const book = postBooking(data)
+    book.then(result =>{
+      if (result.status == 'OK') {
+        localStorage.clear()
+        localStorage.setItem('bookingItem',  JSON.stringify(result.data))
+        toast(result.message, { hideProgressBar: false, autoClose: 2000, type: 'success', position:'bottom-right' })
+        router.push(`/result?phone=${data.phone}`)
+      } else {
+        toast(result.message, { hideProgressBar: false, autoClose: 2000, type: 'error', position:'bottom-right' })
+      }
+    })
+  }
+  
+  function getBook (phone:any) {
+    const book = getBooking(phone)
+    book.then(result =>{
+      if (result.status == 'OK') {
+        localStorage.clear()
+        localStorage.setItem('bookingItem',  JSON.stringify(result.data))
+        toast(result.message, { hideProgressBar: false, autoClose: 2000, type: 'success', position:'bottom-right' })
+        router.push(`/result?phone=${phone}`)
+      } else {
+        toast(result.message, { hideProgressBar: false, autoClose: 2000, type: 'error', position:'bottom-right' })
+      }
+    })
   }
 
   return (
@@ -103,27 +163,28 @@ export function BasicModal() {
                 {state == '1' ? 'Check Booking' : 'Book Now!'}
               </h3>
               <div className="mt-2">
-                <form >
+                <form onSubmit={handleSubmit}>
                   {content}
+
+                  <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                    <button
+                      // onClick={submitData}
+                      type="submit"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 mb-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    >
+                      Submit
+                    </button>
+                    <Link
+                      href="/"
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 mb-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    >
+                      Cancel
+                    </Link>
+                  </div>
                 </form>
               </div>
             </div>
-          </div>
-          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-            <button
-              onClick={submitData}
-              type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 mb-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-            >
-              Submit
-            </button>
-            <Link
-              href="/"
-              type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 mb-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-            >
-              Cancel
-            </Link>
           </div>
         </div>
       </div>

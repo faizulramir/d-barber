@@ -8,31 +8,33 @@ export function ResultForm (data: any) {
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                     Name
                 </label>
-                <span>Faizul</span>
+                <span>{data.formData.name}</span>
             </div>
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                     Phone Number
                 </label>
-                <span>0178016870</span>
+                <span>{data.formData.phone}</span>
             </div>
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                     Date
                 </label>
-                <span>6/10/2023</span>
+                <span>{data.formData.date}</span>
             </div>
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                     Time
                 </label>
-                <span>18:00 PM</span>
+                <span>{data.formData.time}</span>
             </div>
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                     Status
                 </label>
-                <span>Setel</span>
+                <span className={ data.formData.status ? "text-green-700" : "text-red-700" }>
+                    { data.formData.status ? "Success" : "Pending" }
+                </span>
             </div>
             {
                 data.redirectBack ?

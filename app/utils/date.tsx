@@ -82,7 +82,7 @@ export function getTimeSelection(){
         },
         {
             time: '22:00',
-            type: 'am'
+            type: 'pm'
         },
         {
             time: '23:00',
