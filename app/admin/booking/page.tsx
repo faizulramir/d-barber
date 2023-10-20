@@ -2,14 +2,25 @@
 
 import { Nav } from "../components/nav";
 import { Accordion } from "../components/accordion";
-import { useEffect } from 'react';
+import { JSXElementConstructor, PromiseLikeOfReactNode, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getBooking } from "@/app/api/booking";
 
 export default function Booking() {
   const router = useRouter()
-
+  const [data, setData] = useState([]);
+  
   useEffect(() => {
-    // Perform localStorage action
+    async function fetchData() {
+      const book = getBooking()
+      book.then(res => {
+        let data = res.data
+        setData(data);
+      })
+    }
+
+    fetchData();
+
     if (!localStorage.getItem('token')) {
       router.push('/admin/login/')
     }
@@ -32,8 +43,11 @@ export default function Booking() {
           <br />
           <hr/>
           <br />
-          <Accordion count="1" phone="0178016870" status="1"/>
-          <Accordion count="2" phone="0178016872" status="0"/>
+          {
+            data.map((item, index)=> {
+              return (<Accordion key={index} count={index + 1} status="1" formData={item}/>)
+            })
+          }
         </div>
     </div>
   )

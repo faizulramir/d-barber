@@ -3,14 +3,32 @@
 import Image from 'next/image'
 import { Nav } from "../components/nav";
 import { ShopSwitch } from "../components/shopswtich";
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { getShop } from '@/app/api/utils';
 
 export default function Dashboard(data:any) {
   const router = useRouter()
+  const [shopData, setShopData] = useState(true);
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const reload = searchParams.get('reload') ? true : false
+
+  async function fetchData() {
+    const book = getShop()
+    book.then(res => {
+      let data = res.data
+      setShopData(data);
+    })
+  }
+
+  if (reload) {
+    fetchData()
+  }
 
   useEffect(() => {
-    // Perform localStorage action
+    fetchData();
+
     if (!localStorage.getItem('token')) {
       router.push('/admin/login/')
     }
@@ -72,7 +90,7 @@ export default function Dashboard(data:any) {
           </div>
         </div>
       </div>
-      <ShopSwitch switch={true}/>
+      <ShopSwitch switch={shopData}/>
     </div>
   )
 }

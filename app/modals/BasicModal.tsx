@@ -3,27 +3,24 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from 'next/navigation'
 import {getCurrentDate, getTimeSelection, getTimeNow} from '../utils/date'
-import { useRef, useEffect, JSX } from 'react';
+import { useRef, useEffect, JSX, useState } from 'react';
 import { toast } from "react-toastify";
 import { getBooking, postBooking } from "../api/booking";
+import { getTimes } from "../api/utils";
 
 export function BasicModal() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const state = searchParams.get('state') ?? "0"
-
-  let result: JSX.Element[] = []
-  getTimeSelection().forEach(element => {
-    if (getTimeNow() == element.time) {
-      result.push(
-        <option key={element.time} value={element.time + ' ' + element.type} defaultValue={element.time}>{element.time} {element.type.toUpperCase()}</option>
-      )
-    } else {
-      result.push(
-        <option key={element.time} value={element.time + ' ' + element.type.toUpperCase()}>{element.time} {element.type.toUpperCase()}</option>
-      )
-    }
-  })
+  const [dataOption, setData] = useState<any[]>([])
+  const [timeSelect, setTimeSelect] = useState(true)
+  
+  // let cntTrue = 0;
+  // dataOption.forEach((e:any) => {
+  //   if (e.booked) cntTrue++
+  // })
+  
+  // if (cntTrue == dataOption.length) console.log('oi');
 
   let content
   if (state == '1') {
@@ -53,23 +50,32 @@ export function BasicModal() {
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="b_date">
                     Date*
                   </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="b_date" name="b_date" type="date" min={getCurrentDate('-')} value={getCurrentDate('-')} onChange={changeData} autoComplete="true" required/>
+                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="b_date" name="b_date" type="date" min={getCurrentDate('-')} onChange={changeData} required/>
                 </div>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="b_time">
                     Time*
                   </label>
-                  <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="b_time" id="b_time" autoComplete="true" required>
-                    {result.map(item => {
-                        return (item);
+                  <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="b_time" id="b_time" autoComplete="true" required disabled={timeSelect}>
+                    {dataOption.map(element => {
+                        return (<option key={element.time} value={element.time + ' ' + element.type.toUpperCase()} defaultValue={element.time + ' ' + element.type.toUpperCase()} disabled={element.booked ? element.booked : false}>{element.time} {element.type.toUpperCase()}</option>);
                     })}
                   </select>
                 </div>
               </div>
   }
 
-  function changeData() {
+  function changeData(event:any) {
+    fetchData(event.target.value);
+  }
 
+  async function fetchData(date:any) {
+    const book = getTimes(date)
+    book.then(res => {
+      let data = res.data
+      setData(data);
+      setTimeSelect(false)
+    })
   }
 
   const handleSubmit = (event:any) => {

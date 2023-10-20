@@ -16,11 +16,18 @@ export async function postBooking (data:any) {
     }
 };
 
-export async function getBooking (phone:any) {
+export async function getBooking (phone:any = null) {
+    let url
+    if (phone) {
+        url = `/booking/get/${phone}`
+    } else {
+        url = '/booking/get/all'
+    }
     try {
-        const response = await axios.get(apiUrl(1).concat(`/booking/get/${phone}`));
+        const response = await axios.get(apiUrl(1).concat(url));
         return response.data
     } catch (error) {
         return null
     }
 };
+

@@ -23,15 +23,14 @@ const Accordion = (data:any) => {
 
                 onClick={() => setOpen(!open)}
             >
-                <div className="grid grid-cols-2 gap-4">
-                    <div>{data.count}. Faizul ({data.phone})</div>
-                    <div className={`text-end ${data.status == '0' ? 'text-red-700' : 'text-green-700'}`}>{data.status == '0' ? 'Pending' : 'Done'}</div>
+                <div className="grid grid-cols-3 gap-4">
+                    <div className="col-span-3">{data.count}. {data.formData.name}</div>
                 </div>
             </label>
             <div
                 className= "overflow-hidden rounded h-0 peer-checked:h-[460px] peer-checked:overflow-scroll transition-[height] duration-1000 ease-in-out"
             >
-                <ResultForm redirectBack={false}  submitAdmin={data.status == '0' ? true : false}/>
+                <ResultForm redirectBack={false} submitAdmin={data.formData.status == '0' ? true : false} formData={data.formData}/>
             </div>
         </div>
     );

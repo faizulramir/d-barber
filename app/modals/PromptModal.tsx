@@ -1,8 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { getShop } from "../api/utils";
+import { useRouter } from 'next/navigation'
 
 export function PromptModal(data:any) {
+  const router = useRouter()
+
+  function postShop (status:any) {
+    const shopSwitch = getShop(status)
+    shopSwitch.then(res => {
+      router.push(`/admin/dashboard?reload=true`)
+    })
+  }
+
+  function submitShop () {
+    if (data.trigger == 'closeOpenShop') {
+      postShop(data.status)
+    }
+  }
+
   return (
     <div
       className="fixed z-10 inset-0 overflow-y-auto"
@@ -38,6 +55,7 @@ export function PromptModal(data:any) {
           </div>
           <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
             <button
+              onClick={submitShop}
               type="button"
               className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 mb-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
             >
@@ -56,3 +74,4 @@ export function PromptModal(data:any) {
     </div>
   );
 }
+
